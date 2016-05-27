@@ -1,6 +1,7 @@
 # Group numbered output in ls
 Every now and then you stumble upon a directory that just has too. many. files.
 If these files are numbered, you can use `lsdeflate` to reduce your cognitive load.
+![Demo](demo.png?raw=true)
 
 ## Installation
 Installation is simple: put `lsdeflate.py` somewhere in your path and create an alias:
