@@ -54,9 +54,10 @@ for line in sys.stdin:
             nums = []
         nums.append(m.group(2))
     else:
-        # Write out all lines we have
-        find_and_print_expansion(k[0],k[1],nums)
-        nums = []
+        if (k is not None):
+            # Write out all lines we have
+            find_and_print_expansion(k[0],k[1],nums)
+            nums = []
 
         # Write out this line
         sys.stdout.write(line)
