@@ -6,7 +6,10 @@ If these files are numbered, you can use `lsdeflate` to reduce your cognitive lo
 ## Installation
 Installation is simple: put `lsdeflate.py` somewhere in your path and create an alias:
 
-    alias lsd='ls -1 | lsdeflate.py'
+    alias lsd='ls -1 --color=always | lsdeflate.py | column'
+
+This also columnates the output to the width of your terminal.
+Colour output can cause the columnation to be less wide than expected.
 
 ## Contributing
 This is still very crude software. Feel free to create pull requests for changes and improvements!
