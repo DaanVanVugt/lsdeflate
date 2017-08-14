@@ -37,7 +37,7 @@ For now we have a simple algorithm:
 def list_to_ranges(lst):
     diffs = lst[1:] - lst[:-1] # between elements
     block_edges = np.nonzero(diffs[1:] != diffs[:-1]) # true if timestep changed after i+1
-    block_edges = np.append(np.insert(block_edges, 0,0), tmp.shape[0]-1)
+    block_edges = np.append(np.insert(block_edges, 0,0), lst.shape[0]-1)
     ranges = []
     for a, b in zip(block_edges[:-1], block_edges[1:]):
         if (b - a > 1): 
