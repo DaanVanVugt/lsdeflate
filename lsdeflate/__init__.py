@@ -27,24 +27,30 @@ def group_names_by_ext(lines):
 
 
 """
-Convert a list of numbers into a set of ranges, with optional increment and no overlap.
+Convert a list of numbers into a set of ranges, with optional increment
 
 Perhaps we can do something clever here with a fourier transform?
-For now we have a simple algorithm:
-    Calculate difference between numbers
-    Split into ranges where this step is constant.
+For now do a simple recursive algorithm:
+    Find the longest sequence
+    Subtract this from the list
+    recurse
 """
 def list_to_ranges(lst):
+    if not isinstance(lst, np.ndarray): lst = np.asarray(lst)
+    if lst.shape[0] == 0: return []
+    if lst.shape[0] == 1: return [(lst[0],lst[0],1)]
     diffs = lst[1:] - lst[:-1] # between elements
-    block_edges = np.nonzero(diffs[1:] != diffs[:-1]) # true if timestep changed after i+1
+    block_edges = np.asarray(np.nonzero(diffs[1:] != diffs[:-1]))+1 # indices where the diffs have changed
     block_edges = np.append(np.insert(block_edges, 0,0), lst.shape[0]-1)
-    ranges = []
-    for a, b in zip(block_edges[:-1], block_edges[1:]):
-        if (b - a > 1): 
-            ranges.append((a+1, b, diffs[a+1])) # return index instead of value
-        else:
-            ranges.append((a,a,1))
-    return ranges
+    block_lengths = block_edges[1:] - block_edges[:-1]
+    longest_block = np.argmax(block_lengths)
+    istart = block_edges[longest_block]
+    iend   = block_edges[longest_block+1]
+    rest = np.zeros(lst.shape[0]-1-iend+istart,dtype=np.int)
+    rest[:istart] = lst[:istart]
+    rest[istart:] = lst[iend+1:]
+    return sorted([(lst[istart],lst[iend],diffs[istart])] + list_to_ranges(rest),
+                  key=lambda x:x[0])
 
 
 """
