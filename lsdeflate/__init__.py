@@ -34,6 +34,8 @@ For now do a simple recursive algorithm:
     Find the longest sequence
     Subtract this from the list
     recurse
+
+This returns a list of ranges in no particular order
 """
 def list_to_ranges(lst):
     if not isinstance(lst, np.ndarray): lst = np.asarray(lst)
@@ -49,8 +51,13 @@ def list_to_ranges(lst):
     rest = np.zeros(lst.shape[0]-1-iend+istart,dtype=np.int)
     rest[:istart] = lst[:istart]
     rest[istart:] = lst[iend+1:]
-    return sorted([(lst[istart],lst[iend],diffs[istart])] + list_to_ranges(rest),
-                  key=lambda x:x[0])
+    # If it is only a small range consider giving just the numbers
+    if ((lst[iend] - lst[istart])/diffs[istart] == 1):
+        result = [(lst[istart],lst[istart],1), 
+                  (lst[iend],lst[iend],1)]
+    else:
+        result = [(lst[istart],lst[iend],diffs[istart])]
+    return result + list_to_ranges(rest)
 
 
 """
@@ -93,8 +100,9 @@ def group_basenames(basenames):
             for num_s in tmp_s:
                 output.append(key[0] + num_s + key[1])
         else:
-            ranges = list_to_ranges(tmp)
-            for imin,imax,step in ranges:
+            for amin,amax,step in sorted(list_to_ranges(tmp), key=lambda x: x[0]):
+                imin = np.nonzero(tmp == amin)[0][0]
+                imax = np.nonzero(tmp == amax)[0][0]
                 smin = grouped_numbers_str[key][imin]
                 smax = grouped_numbers_str[key][imax]
                 # Remove leading zeros

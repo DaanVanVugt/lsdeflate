@@ -9,5 +9,4 @@ if __name__ == "__main__":
     for ext in grouped_names:
         all_out = all_out + list(map(lambda s: s + ext, 
                                      group_basenames(grouped_names[ext])))
-    all_out.sort()
     print("\n".join(all_out))

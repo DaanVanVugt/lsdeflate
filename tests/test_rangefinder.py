@@ -8,11 +8,10 @@ class RangeCases(unittest.TestCase):
   # for python range function we need to go until step+1
   cases = ([],# empty
            [(1,1,1)],# only [1]
-           [(1,2,1)],# [1 2]
-           [(1,3,2)],
+           [(1,1,1),(2,2,1)],# [1 2]
+           [(1,1,1),(3,3,1)],# [1 3]
            [(2,4,1)],
            [(1,1,1),(2,6,2)],
-           [(1,2,1),(4,5,1),(8,9,1)],
            [(1,8,1),(10,12,1),(14,16,1)],
            )
 
@@ -22,7 +21,7 @@ class RangeCases(unittest.TestCase):
       lst = sorted(sum(
           map(lambda c: list(range(c[0],c[1]+1,c[2])), case), []))
       # sum concatenates lists (because + operator does that)
-      result = lsdeflate.list_to_ranges(lst)
+      result = sorted(lsdeflate.list_to_ranges(lst), key=lambda x: x[0])
       self.assertEqual(case, result, "list="+repr(lst))
 
 if __name__ == '__main__':
